@@ -22,13 +22,19 @@ from rest_framework.views import exception_handler
 from rest_framework_simplejwt.views import (
     TokenObtainPairView, TokenRefreshView)
 from rest_framework import permissions, exceptions
-from api import views_products
+from api import views_orders, views_products
 
 
 urlpatterns = [
     path('admin', admin.site.urls),
     path('token', TokenObtainPairView.as_view(), name="token_obtain_pair"),
     path('token/refresh', TokenRefreshView.as_view(), name="token_refresh"),
+
+    #create producto and categories
     path('product/add', views_products.productCreate, name="create_product"),
-    path('categorie/add', views_products.categorieCreate, name="create_categorie")
+    path('categorie/add', views_products.categorieCreate, name="create_categorie"),
+
+    #create order and status for this
+    path('status/add', views_orders.statusCreated, name="create_status"),
+    path('order/add', views_orders.orderCreated, name="create_order")
 ]

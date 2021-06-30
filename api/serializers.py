@@ -1,6 +1,6 @@
 from django.db.models import fields
 from rest_framework import serializers
-from .models import (product, categories, order, order_details)
+from .models import (product, categories, order, order_details, status)
 
 
 class productSerializer(serializers.ModelSerializer):
@@ -21,4 +21,9 @@ class orderSerializer(serializers.ModelSerializer):
 class orderDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = order_details
+        fields = '__all__'
+
+class statuSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = status
         fields = '__all__'
