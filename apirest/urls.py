@@ -33,8 +33,10 @@ urlpatterns = [
     #create producto and categories
     path('product/add', views_products.productCreate, name="create_product"),
     path('categorie/add', views_products.categorieCreate, name="create_categorie"),
+    
 
     #create order and status for this
+    path('product/stock/<str:pk>', views_orders.validateStock, name="valida_stock"),
     path('status/add', views_orders.statusCreated, name="create_status"),
     path('order/add', views_orders.orderCreated, name="create_order")
 ]
