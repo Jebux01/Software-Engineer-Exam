@@ -17,12 +17,26 @@ linux (debian-based distro)
 
 
 ```pip3 install django```
+
+
 ```pip3 install djangorestframework```
+
+
 ```sudo apt install default-libmysqlclient-dev```
+
+
 ```sudo pip3 install mysqlclient```
+
+
 ```pip3 install django-cors-headers```
+
+
 ```pip3 install drf-yasg```
+
+
 ```pip3 install PyMySQL```
+
+
 ```pip3 install djangorestframework-simplejwt```
 
 change the parameters of the database connection in the settings.py file
