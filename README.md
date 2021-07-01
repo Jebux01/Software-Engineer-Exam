@@ -9,8 +9,8 @@ then install the following libraries
 linux (debian-based distro)
 
 *if you already have the django, djangorestframework, mysqlclient libraries installed, avoid installing these libraries
-[
-sudo pip3 uninstall jwt
+
+sudo pip3 uninstall jwt \n
 sudo pip3 install pyjwt
 pip3 install django
 pip3 install djangorestframework
@@ -19,7 +19,7 @@ sudo pip3 install mysqlclient
 pip3 install django-cors-headers
 pip3 install drf-yasg
 pip3 install PyMySQL
-pip3 install djangorestframework-simplejwt](url)
+pip3 install djangorestframework-simplejwt
 
 change the parameters of the database connection in the settings.py file
 
