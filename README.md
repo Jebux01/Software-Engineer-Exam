@@ -19,6 +19,8 @@ sudo pip3 install mysqlclient
 pip3 install django-cors-headers
 pip3 install drf-yasg
 
+change the parameters of the database connection in the settings.py file
+
 move to the folder where we have downloaded the project and migrate the changes
 
 
