@@ -18,6 +18,7 @@ sudo apt install default-libmysqlclient-dev
 sudo pip3 install mysqlclient
 pip3 install django-cors-headers
 pip3 install drf-yasg
+pip3 install PyMySQL
 
 change the parameters of the database connection in the settings.py file
 
