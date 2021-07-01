@@ -30,13 +30,24 @@ urlpatterns = [
     path('token', TokenObtainPairView.as_view(), name="token_obtain_pair"),
     path('token/refresh', TokenRefreshView.as_view(), name="token_refresh"),
 
-    #create producto and categories
+    #urls products
     path('product/add', views_products.productCreate, name="create_product"),
+    path('product/<str:pk>', views_products.productDetail, name="detail_product"),
+    path('product/delete/<str:pk>', views_products.productDelete, name="delete_product"),
+    path('product/update/<str:pk>', views_products.productUpdate, name="delete_product"),
+    path('product/stock/<str:pk>', views_products.validateStock, name="valida_stock"),
+    
+    #urls categories
     path('categorie/add', views_products.categorieCreate, name="create_categorie"),
     
 
-    #create order and status for this
-    path('product/stock/<str:pk>', views_orders.validateStock, name="valida_stock"),
+    #urls orders
+    path('order/add', views_orders.orderCreated, name="create_order"),
+    path('order/<str:pk>', views_orders.orderFull, name="update_order"),
+    path('order/update/<str:pk>', views_orders.orderUpdate, name="update_order"),
+    path('order/delete/<str:pk>', views_orders.orderDelete, name="update_order"),
+
+    #urls status
     path('status/add', views_orders.statusCreated, name="create_status"),
-    path('order/add', views_orders.orderCreated, name="create_order")
+    path('status', views_orders.statusGet, name="all_status")
 ]

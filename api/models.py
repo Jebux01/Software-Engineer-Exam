@@ -30,7 +30,7 @@ class status(models.Model):
     
 
 class order_details(models.Model):
-    id_order = models.IntegerField(editable=False)
+    order = models.ForeignKey('api.order', on_delete=CASCADE, unique=False)
     codProd = models.IntegerField()
     quantity = models.IntegerField()
     priceProd = models.DecimalField(decimal_places=2, max_digits=5)
