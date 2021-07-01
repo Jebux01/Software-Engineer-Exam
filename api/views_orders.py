@@ -1,3 +1,4 @@
+from datetime import datetime
 from enum import Flag
 from django.shortcuts import render
 from rest_framework import serializers, status
@@ -34,7 +35,7 @@ def orderCreated(request):
     if (serializerOrder.is_valid()):
         serializerOrder.save()
         idOrder = serializerOrder.data['id']
-        details = list(map(lambda prod: {"id_order": idOrder, "codProd": prod[0]['id'], "quantity": list(filter(
+        details = list(map(lambda prod: {"order": idOrder, "codProd": prod[0]['id'], "quantity": list(filter(
             lambda x: x['id'] == prod[0]['id'], dataRec['details']))[0]['quantity'], "priceProd": prod[0]['price']}, products))
 
         saveDetails = list(map(saveOrderDetails, details))
@@ -48,14 +49,13 @@ def orderCreated(request):
         return Response(serializerOrder.errors, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
-def saveOrderDetails(product):
-    print(product)
-    serializerDetails = orderDetailSerializer(data=product)
+def saveOrderDetails(prod):
+    serializerDetails = orderDetailSerializer(data=prod)
     if (serializerDetails.is_valid()):
         serializerDetails.save()
         return {"error": False}
     else:
-        return {"error": True, "message": serializerDetails.error}
+        return {"error": True, "message": serializerDetails.errors}
 
 
 @api_view(['GET'])
@@ -71,21 +71,36 @@ def orderFull(request, pk):
     
     return Response(enData, status=status.HTTP_200_OK)
 
+@api_view(['GET'])
+def orderStatus(request, pk):
+    header = order.objects.filter(status_id=pk)
+    serializer = orderSerializer(header, many=True)
+    enData = serializer.data
+
+    allOrders = []
+    for orderAdd in enData:
+        add = {}
+        add.update(orderAdd)
+        add.update({"details": orderDetailSerializer(order_details.objects.filter(order_id=orderAdd['id']), many=True).data})
+        allOrders.append(add)
+    
+    return Response(allOrders, status=status.HTTP_200_OK)
 
 @api_view(['PUT'])
 def orderUpdate(request, pk):
     orderUp = order.objects.get(id=pk)
+    request.data['dateInProcess'] = datetime.now()
     serializer = orderSerializer(instance=orderUp, data=request.data)
     if serializer.is_valid():
         serializer.save()
         return Response(serializer.data, status=status.HTTP_200_OK)
     else:
-        return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        return Response(serializer.errors,status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 @api_view(['DELETE'])
 def orderDelete(request, pk):
-    orderDel = orderSerializer.objects.get(id=pk)
+    orderDel = order.objects.get(id=pk)
     orderDel.delete()
     return Response("Se elimino la orden correctamente", status=status.HTTP_200_OK)
 
@@ -95,3 +110,5 @@ def statusGet(request):
     statusAll = StatusOrder.objects.all()
     serializer = statuSerializer(statusAll, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)
+
+

@@ -5,7 +5,7 @@ from django.db.models.deletion import CASCADE
 class product(models.Model):
     description = models.CharField(max_length=30, unique=True)
     user = models.CharField(max_length=30)
-    dateUp = models.DateTimeField()
+    dateUp = models.DateTimeField(auto_now_add=True, blank=True)
     category = models.ForeignKey('api.categories', on_delete=CASCADE, unique=False)
     price = models.DecimalField(decimal_places=2, max_digits=5)
     stock = models.IntegerField()
@@ -18,7 +18,7 @@ class categories(models.Model):
 class order(models.Model):
     status = models.ForeignKey('api.status', on_delete=CASCADE, unique=False, default=1)
     date_up = models.DateTimeField(auto_now_add=True, blank=True)
-    total = models.DecimalField(decimal_places=2, max_digits=5)
+    total = models.DecimalField(decimal_places=2, max_digits=25)
     user = models.CharField(max_length=30)
     dateInProcess = models.DateTimeField(blank=True, null=True)
     dateCompleted = models.DateTimeField(blank=True, null=True)

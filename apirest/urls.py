@@ -46,6 +46,7 @@ urlpatterns = [
     path('order/<str:pk>', views_orders.orderFull, name="update_order"),
     path('order/update/<str:pk>', views_orders.orderUpdate, name="update_order"),
     path('order/delete/<str:pk>', views_orders.orderDelete, name="update_order"),
+    path('order/status/<str:pk>', views_orders.orderStatus, name="status_order"),
 
     #urls status
     path('status/add', views_orders.statusCreated, name="create_status"),
