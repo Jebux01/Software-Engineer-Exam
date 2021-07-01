@@ -25,6 +25,6 @@ change the parameters of the database connection in the settings.py file
 
 move to the folder where we have downloaded the project and migrate the changes
 
-
+import the json file to postman to be able to see the calls
 
 
