@@ -1,10 +1,10 @@
 from datetime import datetime
 from enum import Flag
 from django.shortcuts import render
-from rest_framework import serializers, status
+from rest_framework import  status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from .serializers import categorieSerializer, statuSerializer, orderSerializer, productSerializer, orderDetailSerializer
+from .serializers import statuSerializer, orderSerializer, productSerializer, orderDetailSerializer
 from .models import product, order, order_details, status as StatusOrder
 from rest_framework.parsers import JSONParser
 
@@ -22,10 +22,9 @@ def statusCreated(request):
 @api_view(['POST'])
 def orderCreated(request):
     dataRec = JSONParser().parse(request)
-    products = list(map(lambda item: productSerializer(product.objects.filter(
-        id=item['id']), many=True).data, dataRec['details']))
-    totals = list(map(float, list(map(lambda prod: (float(prod[0]['price']) * list(filter(
-        lambda x: x['id'] == prod[0]['id'], dataRec['details']))[0]['quantity']), products))))
+    products = list(map(lambda item: productSerializer(product.objects.filter(id=item['prod']), many=True).data, dataRec['details']))
+    print(products)
+    totals = list(map(float, list(map(lambda prod: (float(prod[0]['price']) * list(filter(lambda x: x['prod'] == prod[0]['id'], dataRec['details']))[0]['quantity']), products))))
     dataOrder = {
         "total": sum(totals),
         "user": dataRec['user']
@@ -35,8 +34,8 @@ def orderCreated(request):
     if (serializerOrder.is_valid()):
         serializerOrder.save()
         idOrder = serializerOrder.data['id']
-        details = list(map(lambda prod: {"order": idOrder, "codProd": prod[0]['id'], "quantity": list(filter(
-            lambda x: x['id'] == prod[0]['id'], dataRec['details']))[0]['quantity'], "priceProd": prod[0]['price']}, products))
+        details = list(map(lambda prod: {"order": idOrder, "prod": prod[0]['id'], "quantity": list(filter(
+            lambda x: x['prod'] == prod[0]['id'], dataRec['details']))[0]['quantity'], "priceProd": prod[0]['price']}, products))
 
         saveDetails = list(map(saveOrderDetails, details))
         error = list(filter(lambda x: x['error'] == True, saveDetails))
@@ -66,8 +65,15 @@ def orderFull(request, pk):
     details = order_details.objects.filter(order_id=pk)
     serializerDet = orderDetailSerializer(details, many=True)
 
+    detailsProd = []
+    for prod in serializerDet.data:
+        add = {}
+        add.update(prod)
+        add.update({"description": productSerializer(product.objects.get(id=prod['prod']), many=False).data['description']})
+        detailsProd.append(add)
+
     enData = serializer.data
-    enData.update({"details": serializerDet.data})
+    enData.update({"details": detailsProd})
     
     return Response(enData, status=status.HTTP_200_OK)
 
@@ -78,10 +84,19 @@ def orderStatus(request, pk):
     enData = serializer.data
 
     allOrders = []
+    
     for orderAdd in enData:
         add = {}
         add.update(orderAdd)
-        add.update({"details": orderDetailSerializer(order_details.objects.filter(order_id=orderAdd['id']), many=True).data})
+        prods = orderDetailSerializer(order_details.objects.filter(order_id=orderAdd['id']), many=True).data
+        prodsD = []
+        for prod in prods:
+            adD = {}
+            adD.update(prod)
+            adD.update({"description": productSerializer(product.objects.get(id=prod['prod']), many=False).data['description']})
+            prodsD.append(adD)
+        
+        add.update({"details": prodsD})
         allOrders.append(add)
     
     return Response(allOrders, status=status.HTTP_200_OK)

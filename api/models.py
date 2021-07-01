@@ -31,6 +31,9 @@ class status(models.Model):
 
 class order_details(models.Model):
     order = models.ForeignKey('api.order', on_delete=CASCADE, unique=False)
-    codProd = models.IntegerField()
+    prod = models.ForeignKey('api.product', on_delete=CASCADE, unique=False)
     quantity = models.IntegerField()
     priceProd = models.DecimalField(decimal_places=2, max_digits=5)
+
+
+
